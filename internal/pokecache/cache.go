@@ -27,31 +27,3 @@ func NewCache(interval time.Duration) *Cache {
 
 	return c
 }
-
-func (c *Cache) Add(key string, val []byte) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.Entries[key] = cacheEntry{
-		Val:       val,
-		CreatedAt: time.Now(),
-	}
-}
-
-func (c *Cache) Get(key string) ([]byte, bool) {
-	val, exists := c.Entries[key]
-	if !exists {
-		return nil, false
-	}
-
-	return val.Val, false
-}
-
-func (c *Cache) ReapLoop(interval time.Duration) {
-	ttl := time.Now().Add(-interval)
-
-	for k, v := range c.Entries {
-		if v.CreatedAt.Unix() < ttl.Unix() {
-			delete(c.Entries, k)
-		}
-	}
-}
