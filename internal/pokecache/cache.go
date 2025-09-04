@@ -15,8 +15,17 @@ type cacheEntry struct {
 	CreatedAt time.Time // Represents when the entry was created
 }
 
-func NewCache(interval time.Duration) Cache {
-	return Cache{}
+func NewCache(interval time.Duration) *Cache {
+	c := &Cache{
+		Entries: make(map[string]cacheEntry),
+		mu:      sync.Mutex{},
+	}
+
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.ReapLoop(interval)
+
+	return c
 }
 
 func (c *Cache) Add(key string, val []byte) {
@@ -37,4 +46,12 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 	return val.Val, false
 }
 
-func (c *Cache) ReapLoop() {}
+func (c *Cache) ReapLoop(interval time.Duration) {
+	ttl := time.Now().Add(-interval)
+
+	for k, v := range c.Entries {
+		if v.CreatedAt.Unix() < ttl.Unix() {
+			delete(c.Entries, k)
+		}
+	}
+}
