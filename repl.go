@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/matthieukhl/go-pokedex/internal/pokeapi"
+	"github.com/matthieukhl/go-pokedex/internal/pokecache"
 )
 
 type config struct {
@@ -15,7 +16,7 @@ type config struct {
 	prevLocationsURL *string
 }
 
-func startRepl(cfg *config) {
+func startRepl(cfg *config, c *pokecache.Cache) {
 	reader := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -31,7 +32,7 @@ func startRepl(cfg *config) {
 
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback(cfg)
+			err := command.callback(cfg, c)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -53,7 +54,7 @@ func cleanInput(text string) []string {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, *pokecache.Cache) error
 }
 
 func getCommands() map[string]cliCommand {

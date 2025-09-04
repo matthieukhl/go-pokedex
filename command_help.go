@@ -1,8 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-func commandHelp(cfg *config) error {
+	"github.com/matthieukhl/go-pokedex/internal/pokecache"
+)
+
+func commandHelp(cfg *config, c *pokecache.Cache) error {
 	fmt.Println()
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")

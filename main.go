@@ -4,6 +4,11 @@ import (
 	"time"
 
 	"github.com/matthieukhl/go-pokedex/internal/pokeapi"
+	"github.com/matthieukhl/go-pokedex/internal/pokecache"
+)
+
+const (
+	interval = 5
 )
 
 func main() {
@@ -11,6 +16,7 @@ func main() {
 	cfg := &config{
 		pokeapiClient: pokeClient,
 	}
+	c := pokecache.NewCache(interval)
 
-	startRepl(cfg)
+	startRepl(cfg, c)
 }

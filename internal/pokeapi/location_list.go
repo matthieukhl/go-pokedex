@@ -4,14 +4,28 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"github.com/matthieukhl/go-pokedex/internal/pokecache"
 )
 
 // List Locations
-func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
+func (c *Client) ListLocations(pageURL *string, cache *pokecache.Cache) (RespShallowLocations, error) {
 	url := baseURL + "/location-area"
 
 	if pageURL != nil {
 		url = *pageURL
+	}
+
+	// Check if data exists in cache
+	val, exists := cache.Get(url)
+	if exists {
+		locationsResp := RespShallowLocations{}
+		err := json.Unmarshal(val, &locationsResp)
+		if err != nil {
+			return RespShallowLocations{}, err
+		}
+
+		return locationsResp, nil
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -29,6 +43,9 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 	if err != nil {
 		return RespShallowLocations{}, err
 	}
+
+	// Add url & data to cache
+	cache.Add(url, dat)
 
 	locationResp := RespShallowLocations{}
 	err = json.Unmarshal(dat, &locationResp)
