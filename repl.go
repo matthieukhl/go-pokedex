@@ -4,10 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/matthieukhl/go-pokedex/internal/pokeapi"
 	"github.com/matthieukhl/go-pokedex/internal/pokecache"
+	"github.com/matthieukhl/go-pokedex/utils"
 )
 
 type config struct {
@@ -23,7 +23,7 @@ func startRepl(cfg *config, c *pokecache.Cache) {
 		fmt.Print("Pokedex > ")
 		reader.Scan()
 
-		words := cleanInput(reader.Text())
+		words := utils.CleanInput(reader.Text())
 		if len(words) == 0 {
 			continue
 		}
@@ -42,13 +42,6 @@ func startRepl(cfg *config, c *pokecache.Cache) {
 			continue
 		}
 	}
-}
-
-func cleanInput(text string) []string {
-	output := strings.ToLower(text)
-	words := strings.Fields(output)
-
-	return words
 }
 
 type cliCommand struct {
