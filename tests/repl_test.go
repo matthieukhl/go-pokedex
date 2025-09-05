@@ -1,6 +1,10 @@
-package main
+package test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/matthieukhl/go-pokedex/utils"
+)
 
 func TestCleanInput(t *testing.T) {
 	cases := []struct {
@@ -18,7 +22,7 @@ func TestCleanInput(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := cleanInput(c.input)
+		actual := utils.CleanInput(c.input)
 		if len(actual) != len(c.expected) {
 			t.Errorf("Got %d, want %d", len(actual), len(c.expected))
 		}
