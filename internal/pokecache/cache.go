@@ -21,9 +21,13 @@ func NewCache(interval time.Duration) *Cache {
 		mu:      sync.Mutex{},
 	}
 
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.ReapLoop(interval)
+	ticker := time.NewTicker(interval)
+
+	go func() {
+		for range ticker.C {
+			c.ReapLoop(interval)
+		}
+	}()
 
 	return c
 }

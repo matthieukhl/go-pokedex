@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	interval = 5
+	interval = 5 * time.Second
 )
 
 func main() {

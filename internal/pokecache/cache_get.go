@@ -8,5 +8,5 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 		return nil, false
 	}
 
-	return val.Val, false
+	return val.Val, true
 }

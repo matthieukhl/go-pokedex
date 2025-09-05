@@ -10,7 +10,7 @@ import (
 
 // List Locations
 func (c *Client) ListLocations(pageURL *string, cache *pokecache.Cache) (RespShallowLocations, error) {
-	url := baseURL + "/location-area"
+	url := baseURL + "/location-area?offset=0&limit=20"
 
 	if pageURL != nil {
 		url = *pageURL
